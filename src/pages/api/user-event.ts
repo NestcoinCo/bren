@@ -12,6 +12,7 @@ enum Event {
     P2P_TRX_IP = "P2P_TRX_IP",
     SWAP_SAME_CHAIN = "SWAP_SAME_CHAIN",
     SWAP_CROSS_CHAIN = "SWAP_CROSS_CHAIN",
+    CARD_FUNDING = "CARD_FUNDING"
 }
 
 // Define the Platform enum
@@ -30,13 +31,14 @@ const EVENT_POINTS: { [key in Event]: number | ((amount: number) => number) } = 
     [Event.P2P_TRX_IP]: (amount: number) => amount * 15,
     [Event.SWAP_SAME_CHAIN]: (amount: number) => amount * 20,
     [Event.SWAP_CROSS_CHAIN]: (amount: number) => amount * 20,
+    [Event.CARD_FUNDING]: (amount: number) => amount * 15,
 };
 
 // Events that don't require an amount
 const EVENTS_WITHOUT_AMOUNT = [Event.CREATED_ACCOUNT, Event.COMPLETED_KYC, Event.CREATED_CARD];
 
 // Events that require an amount
-const EVENTS_WITH_AMOUNT = [Event.CARD_TRX, Event.P2P_TRX, Event.P2P_TRX_IP, Event.SWAP_CROSS_CHAIN, Event.SWAP_SAME_CHAIN];
+const EVENTS_WITH_AMOUNT = [Event.CARD_TRX, Event.P2P_TRX, Event.P2P_TRX_IP, Event.SWAP_CROSS_CHAIN, Event.SWAP_SAME_CHAIN, Event.CARD_FUNDING];
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'POST') {
