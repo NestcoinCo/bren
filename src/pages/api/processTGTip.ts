@@ -112,7 +112,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             },
         });
 
-        const remainingAllowance = 1500 - (tipsSentThisWeek._sum.amount || 0);
+        const remainingAllowance = 500 - (tipsSentThisWeek._sum.amount || 0);
         console.log("Remaining allowance:", remainingAllowance);
 
         if (amount <= remainingAllowance) {
