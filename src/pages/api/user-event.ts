@@ -12,7 +12,18 @@ enum Event {
     P2P_TRX_IP = "P2P_TRX_IP",
     SWAP_SAME_CHAIN = "SWAP_SAME_CHAIN",
     SWAP_CROSS_CHAIN = "SWAP_CROSS_CHAIN",
-    CARD_FUNDING = "CARD_FUNDING"
+    CARD_FUNDING = "CARD_FUNDING",
+    // New events without amount
+    FIRST_FINANCIAL_TRX = "FIRST_FINANCIAL_TRX",
+    COMPLETED_USER_REFERRAL = "COMPLETED_USER_REFERRAL",
+    COMPLETED_MERCHANT_REFERRAL = "COMPLETED_MERCHANT_REFERRAL",
+    // New events with amount
+    ONBOARD_DIRECT_TRX = "ONBOARD_DIRECT_TRX",
+    SWITCH_TRX = "SWITCH_TRX",
+    MERCHANT_REGULAR_P2P = "MERCHANT_REGULAR_P2P",
+    MERCHANT_INSTANT_PAY = "MERCHANT_INSTANT_PAY",
+    ONBOARD_PAY_TRX = "ONBOARD_PAY_TRX",
+    MERCHANT_OPN_ORDER = "MERCHANT_OPN_ORDER"
 }
 
 // Define the Platform enum
@@ -32,13 +43,45 @@ const EVENT_POINTS: { [key in Event]: number | ((amount: number) => number) } = 
     [Event.SWAP_SAME_CHAIN]: (amount: number) => amount * 20,
     [Event.SWAP_CROSS_CHAIN]: (amount: number) => amount * 20,
     [Event.CARD_FUNDING]: (amount: number) => amount * 15,
+      // New events without amount
+      [Event.FIRST_FINANCIAL_TRX]: 100,
+      [Event.COMPLETED_USER_REFERRAL]: 50,
+      [Event.COMPLETED_MERCHANT_REFERRAL]: 50,
+      
+      // New events with amount (base value $1 per $ traded with multipliers)
+      [Event.ONBOARD_DIRECT_TRX]: (amount: number) => amount * 20, // 2x multiplier
+      [Event.SWITCH_TRX]: (amount: number) => amount * 20, // 2x multiplier
+      [Event.MERCHANT_REGULAR_P2P]: (amount: number) => amount * 10, // 1x multiplier
+      [Event.MERCHANT_INSTANT_PAY]: (amount: number) => amount * 15, // 1.5x multiplier
+      [Event.ONBOARD_PAY_TRX]: (amount: number) => amount * 20, // 2x multiplier
+      [Event.MERCHANT_OPN_ORDER]: (amount: number) => amount * 15, // 1.5x multiplier
 };
 
 // Events that don't require an amount
-const EVENTS_WITHOUT_AMOUNT = [Event.CREATED_ACCOUNT, Event.COMPLETED_KYC, Event.CREATED_CARD];
+const EVENTS_WITHOUT_AMOUNT = [
+    Event.CREATED_ACCOUNT,
+    Event.COMPLETED_KYC,
+    Event.CREATED_CARD,
+    Event.FIRST_FINANCIAL_TRX,
+    Event.COMPLETED_USER_REFERRAL,
+    Event.COMPLETED_MERCHANT_REFERRAL
+];
 
 // Events that require an amount
-const EVENTS_WITH_AMOUNT = [Event.CARD_TRX, Event.P2P_TRX, Event.P2P_TRX_IP, Event.SWAP_CROSS_CHAIN, Event.SWAP_SAME_CHAIN, Event.CARD_FUNDING];
+const EVENTS_WITH_AMOUNT = [
+    Event.CARD_TRX,
+    Event.P2P_TRX,
+    Event.P2P_TRX_IP,
+    Event.SWAP_CROSS_CHAIN,
+    Event.SWAP_SAME_CHAIN,
+    Event.CARD_FUNDING,
+    Event.ONBOARD_DIRECT_TRX,
+    Event.SWITCH_TRX,
+    Event.MERCHANT_REGULAR_P2P,
+    Event.MERCHANT_INSTANT_PAY,
+    Event.ONBOARD_PAY_TRX,
+    Event.MERCHANT_OPN_ORDER
+];
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'POST') {
@@ -111,6 +154,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             if (amount === undefined) {
                 return res.status(400).json({ error: 'Amount is required for this event type' });
             }
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             pointsEarned = pointValue(amount);
         } else {
             pointsEarned = pointValue;
@@ -170,7 +214,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             userId: user.id,
             wallet: user.walletAddress,
             pointsEarned,
-            totalPoints: totalPoints._sum.points || 0,
+            totalPoints: totalPoints._sum.points ?? 0,
             message: 'Event processed successfully',
         });
     } catch (error) {
