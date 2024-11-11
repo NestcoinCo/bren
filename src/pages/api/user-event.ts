@@ -168,6 +168,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 amount: amount || null,
                 points: pointsEarned,
                 platform: platform as Platform,
+                additionalData
             },
         });
 

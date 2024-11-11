@@ -77,14 +77,15 @@ model VerificationToken {
 }
 
 model PointEvent {
-  id        String   @id @default(uuid())
-  userId    String
-  event     Event
-  amount    Float?
-  points    Int
-  platform  Platform
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
+  id             String   @id @default(uuid())
+  userId         String
+  event          Event
+  amount         Float?
+  points         Int
+  platform       Platform
+  createdAt      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id])
+  additionalData String?
 }
 
 model FarcasterDetails {
