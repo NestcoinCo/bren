@@ -32,7 +32,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 platform: event.platform,
                 points: event.points,
                 createdAt: event.createdAt,
-                additionalData: event.additionalData
+                additionalData: event.additionalData,
+                amount: event.amount
             })),
             totalPoints
         }
