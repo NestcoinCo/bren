@@ -23,7 +23,10 @@ enum Event {
     MERCHANT_REGULAR_P2P = "MERCHANT_REGULAR_P2P",
     MERCHANT_INSTANT_PAY = "MERCHANT_INSTANT_PAY",
     ONBOARD_PAY_TRX = "ONBOARD_PAY_TRX",
-    MERCHANT_OPN_ORDER = "MERCHANT_OPN_ORDER"
+    MERCHANT_OPN_ORDER = "MERCHANT_OPN_ORDER",
+    VA_FUNDING= "VA_FUNDING",
+    VA_WITHDRAWAL="VA_WITHDRAWAL",
+    CARD_FUNDING_VA="CARD_FUNDING_VA"
 }
 
 // Define the Platform enum
@@ -55,6 +58,9 @@ const EVENT_POINTS: { [key in Event]: number | ((amount: number) => number) } = 
       [Event.MERCHANT_INSTANT_PAY]: (amount: number) => amount * 15, // 1.5x multiplier
       [Event.ONBOARD_PAY_TRX]: (amount: number) => amount * 20, // 2x multiplier
       [Event.MERCHANT_OPN_ORDER]: (amount: number) => amount * 15, // 1.5x multiplier
+      [Event.VA_FUNDING]: (amount: number) => amount * 20, // 2x multiplier,
+      [Event.VA_WITHDRAWAL]: (amount: number) => amount * 20, // 2x multiplier,
+      [Event.CARD_FUNDING_VA]: (amount: number) => amount * 15, // 2x multiplier
 };
 
 // Events that don't require an amount
@@ -80,7 +86,10 @@ const EVENTS_WITH_AMOUNT = [
     Event.MERCHANT_REGULAR_P2P,
     Event.MERCHANT_INSTANT_PAY,
     Event.ONBOARD_PAY_TRX,
-    Event.MERCHANT_OPN_ORDER
+    Event.MERCHANT_OPN_ORDER,
+    Event.VA_FUNDING,
+    Event.VA_WITHDRAWAL,
+    Event.CARD_FUNDING_VA
 ];
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

@@ -40,6 +40,7 @@ model User {
   pointEvents          PointEvent[]
   accounts             Account[]
   sessions             Session[]
+  Spins                Spin[]
 }
 
 model Account {
@@ -86,6 +87,23 @@ model PointEvent {
   createdAt      DateTime @default(now())
   user           User     @relation(fields: [userId], references: [id])
   additionalData Json?
+  spinCalculated Boolean? @default(false)
+  Spins          Spin[]
+}
+
+model Spin {
+  id           String      @id @default(uuid())
+  userId       String
+  sparks       Float
+  eth          Float
+  pointEventId String? // Foreign key to PointEvent
+  txnhash      String?
+  Netflix      Boolean?
+  createdAt    DateTime    @default(now())
+  user         User        @relation(fields: [userId], references: [id])
+  pointEvent   PointEvent? @relation(fields: [pointEventId], references: [id])
+
+  @@index([pointEventId])
 }
 
 model FarcasterDetails {
@@ -236,4 +254,7 @@ enum Event {
   MERCHANT_INSTANT_PAY
   ONBOARD_PAY_TRX
   MERCHANT_OPN_ORDER
+  VA_FUNDING
+  VA_WITHDRAWAL
+  CARD_FUNDING_VA
 }
