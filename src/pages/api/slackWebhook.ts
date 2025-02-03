@@ -244,7 +244,7 @@ async function processSlackEvent(event: SlackEvent['event']) {
 // Helper function to check if the bot is mentioned
 function isBotMentioned(text: string): boolean {
   // Replace with your bot's user ID or username
-  const botUserId = '<@U08BCR9CA2F>';
+  const botUserId = '<@U08BC9QK7CN>';
   return text.includes(botUserId);
 }
 
