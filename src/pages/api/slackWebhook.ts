@@ -92,7 +92,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       if (existingMessage) {
           console.log('Duplicate message detected:', ts);
-          await addSlackReaction(channel, ts, false);
           return res.status(200).json({ message: 'Duplicate message' });
       }
 
