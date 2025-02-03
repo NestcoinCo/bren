@@ -96,13 +96,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           return res.status(200).json({ message: 'Duplicate message' });
       }
 
-      // Send successful response before processing
-      res.status(200).json({ message: 'Webhook received and will be processed' });
-
-      // Continue processing asynchronously
-      await processSlackEvent(payload.event).catch(error => {
+        // Continue processing asynchronously
+        await processSlackEvent(payload.event).catch(error => {
           console.error('Error in async processing:', error);
       });
+
+      // Send successful response before processing
+      res.status(200).json({ message: 'Webhook received and will be processed' });
 
   } catch (error) {
       console.error('Error processing webhook:', error);
@@ -112,6 +112,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 async function processSlackEvent(event: SlackEvent['event']) {
   const { text, channel, user, ts } = event;
+
+  console.log("tip processing", event)
 
   try {
       // Check if the bot was mentioned
