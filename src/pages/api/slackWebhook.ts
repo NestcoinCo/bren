@@ -140,19 +140,15 @@ async function processSlackEvent(event: SlackEvent['event']) {
       }
 
       // Process the tip
-      const response = await fetch('YOUR_PROCESS_TIP_ENDPOINT', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
+      const response = await processSlackTip({
               fromUsername,
               fromUserId: user,
               toUsername: tipInfo.recipient,
               amount: tipInfo.amount,
               messageId: ts,
               channelId: channel,
-              channelName: 'Slack Channel'
-          })
-      });
+              channelName: 'Slack Channel', // You can fetch the channel name if needed
+            });
 
       if (!response.ok) {
           console.error('Tip processing failed:', await response.text());
