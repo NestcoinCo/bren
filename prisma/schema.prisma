@@ -189,6 +189,54 @@ model Invite {
   castHash             String
 }
 
+model SlackUser {
+  id            String              @id @default(cuid())
+  slackUsername String              @unique
+  walletAddress String?             @unique
+  displayName   String?
+  sentTips      SlackTransaction[]  @relation("FromSlackUser")
+  receivedTips  SlackTransaction[]  @relation("ToSlackUser")
+  weeklyPoints  SlackWeeklyPoints[]
+  rankings      SlackUserRankings?
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+}
+
+model SlackTransaction {
+  id          String    @id @default(uuid())
+  fromUserId  String
+  toUserId    String
+  amount      Float
+  messageId   String    @unique
+  channelId   String
+  channelName String
+  text        String?
+  createdAt   DateTime  @default(now())
+  fromUser    SlackUser @relation("FromSlackUser", fields: [fromUserId], references: [id])
+  toUser      SlackUser @relation("ToSlackUser", fields: [toUserId], references: [id])
+}
+
+model SlackUserRankings {
+  id                String    @id @default(uuid())
+  userId            String    @unique
+  tipsReceived      Float     @default(0)
+  tipsSent          Float     @default(0)
+  tipsReceivedCount Int       @default(0)
+  tipsSentCount     Int       @default(0)
+  user              SlackUser @relation(fields: [userId], references: [id])
+}
+
+model SlackWeeklyPoints {
+  id           String    @id @default(uuid())
+  userId       String
+  weekStart    DateTime
+  pointsEarned Float     @default(0)
+  pointsGiven  Float     @default(0)
+  user         SlackUser @relation(fields: [userId], references: [id])
+
+  @@unique([userId, weekStart])
+}
+
 model BotReply {
   repliedAt    DateTime @default(now())
   botcastHash  String   @unique

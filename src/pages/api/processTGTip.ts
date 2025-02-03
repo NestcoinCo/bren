@@ -1,12 +1,10 @@
 // pages/api/process-tip.ts
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
-import { db } from '~/server/db';
 import { getStartOfWeek, sendTelegramDM } from './telegramWebhook';
+import { db } from '~/server/db';
 
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const API_SECRET = process.env.API_SECRET; // Add this to your environment variables
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'POST') {
