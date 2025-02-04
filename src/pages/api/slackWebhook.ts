@@ -302,7 +302,7 @@ async function parseTipMessage(text: string): Promise<{ sender: string; recipien
   }
 
   // Extract the amount
-  const amountRegex = /\$(\d+)/;
+  const amountRegex = /(\d+)\s*\$bren/i;  // \s* allows for optional whitespace between number and $bren
   const amountMatch = text.match(amountRegex);
 
   if (!amountMatch || !amountMatch[1]) {
